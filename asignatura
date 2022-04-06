@@ -1,0 +1,94 @@
+#include <iostream>
+using namespace std;
+const int MAX_PRERREQ = 5;
+class Asignatura {
+    string nombre;
+    string acronimo;
+    int curso;
+    int num_prerreq;
+    Asignatura *prerreq[MAX_PRERREQ];
+public:
+    void set_asignatura(string nombre2 ,string acronimo2,int curso2,int num_prereq2=0){
+        nombre=nombre2;
+        acronimo=acronimo2;
+        curso=curso2;
+        num_prerreq=num_prereq2;
+    }
+    string get_nom(){
+        return nombre;
+    }
+    string get_acron(){
+        return acronimo;
+    }
+    int get_curso(){
+        return curso;
+    }
+    int get_num_prereq(){
+        return num_prerreq;
+    }
+    bool aniadir_Prerreq(Asignatura* nuevoPrerreq) {
+        for (int i = 0; i < num_prerreq; ++i) {
+            prerreq[i] = nuevoPrerreq;
+            if (i < num_prerreq) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    Asignatura* buscarPrerreq(string acron){
+        for (int i = 0; i < num_prerreq; ++i) {
+            if(prerreq[i]->acronimo==acron){
+                return prerreq[i];
+            } else{
+                return NULL;
+            }
+        }
+    };
+};
+int main() {
+    Asignatura  FP ,MP,ED ;
+    Asignatura *asig;
+    int num_asig,curso,numero_pre;
+    string nobre_asig,Acron_asig,acron_prerq,acron_busc;
+    cout<<"introduzca el num de asignaturas"<<endl;
+    cin>>num_asig;
+    asig=new Asignatura[num_asig];
+    for (int i = 0; i < num_asig; ++i) {
+        cout<<"introduzca el nombre de la asig "<<i<<endl;
+        cin>>nobre_asig;
+        cout<<"introduzca el acronimode la asig "<<i<<endl;
+        cin>>Acron_asig;
+        cout<<"introduzca el curso de la asig "<<i<<endl;
+        cin>>curso;
+        cout<<"introduzca el numero de prereqsitosde la asig "<<i<<endl;
+        cin>>numero_pre;
+        asig[i].set_asignatura(nobre_asig,Acron_asig,curso,numero_pre);
+    }
+    for (int i = 0; i < num_asig; ++i) {
+        for (int j = 0; j < asig[i].get_num_prereq(); ++j) {
+            cout<<"introduzca el prereqisito "<<j<<" de la asignatura "<<asig[i].get_nom()<<endl;
+            cin>>acron_prerq;
+            for (int k = 0; k < num_asig; ++k) {
+                if (asig[k].get_acron()==acron_prerq){
+                    asig[i].aniadir_Prerreq(&asig[k]);
+                }
+            }
+        }
+    }
+    for (int i = 0; i < num_asig; ++i) {
+        for (int j = 0; j < asig[i].get_num_prereq(); ++j) {
+            cout<<"introduzca el prereqisito a buscar de la asignatura "<<asig->get_acron()<<endl;
+            cin>>acron_busc;
+            for (int k = 0; k < num_asig; ++k) {
+                if (asig[i].buscarPrerreq(acron_busc)!=NULL){
+                    cout<<asig->buscarPrerreq(acron_busc)->get_acron()<<" es prerquisito de"<<asig[i].get_nom()<<endl;
+                }else{
+                    cout<<"no es prerquisito de "<<asig[i].get_nom()<<endl;
+                };
+            }
+        }
+    }
+    delete [] asig;
+    return 0;
+}
